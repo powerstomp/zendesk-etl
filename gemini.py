@@ -47,10 +47,10 @@ class GeminiClient:
             result = list(
                 self.client.file_search_stores.documents.list(parent=self.store_name)
             )
-            logger.info("Found %d existing documents in store", len(result))
+            logger.debug("Found %d existing documents in store", len(result))
             return result
         except Exception:
-            logger.fatal("Failed to list existing documents", exc_info=True)
+            logger.exception("Failed to list existing documents", exc_info=True)
             return None
 
     def _upload_document(
@@ -78,10 +78,12 @@ class GeminiClient:
                     "custom_metadata": meta.to_list(),
                 },
             )
-            logger.info("Uploaded %s — %s", doc.id, doc.title)
+            logger.debug("Uploaded %s — %s", doc.id, doc.title)
             return True
         except Exception:
-            logger.error("Failed to upload %s — %s", doc.id, doc.title)
+            logger.exception(
+                "Failed to upload %s — %s", doc.id, doc.title, exc_info=True
+            )
             return False
 
     def _delete_document(self, resource_name: str) -> bool:
@@ -91,7 +93,7 @@ class GeminiClient:
             )
             return True
         except Exception:
-            logger.exception("Failed to delete document")
+            logger.exception("Failed to delete document", exc_info=True)
             return False
 
     def _update_document(

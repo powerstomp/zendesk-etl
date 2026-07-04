@@ -24,7 +24,9 @@ class ZendeskClient:
         self.base_url = base_url.rstrip("/")
         self.locale = locale
         self.session = requests.Session()
-        logger.info("Initialized ZendeskClient for %s (%s)", self.base_url, self.locale)
+        logger.debug(
+            "Initialized ZendeskClient for %s (%s)", self.base_url, self.locale
+        )
 
     def get_all_articles(self) -> list[ZendeskArticle]:
         articles: list[ZendeskArticle] = []
@@ -48,5 +50,4 @@ class ZendeskClient:
             url = data.get("next_page")
             params = {}
 
-        logger.info("Fetched %d articles total", len(articles))
         return articles
