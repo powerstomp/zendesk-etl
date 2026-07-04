@@ -50,9 +50,10 @@ def main() -> None:
         logger.info("Syncing documents...")
         result = gclient.sync(articles)
         logger.info(
-            "Synced: %d created, %d updated, %d deleted",
+            "Synced: %d created, %d updated, %d skipped, %d deleted",
             result.created,
             result.updated,
+            result.skipped,
             result.deleted,
         )
     else:

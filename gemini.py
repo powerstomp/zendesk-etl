@@ -41,6 +41,7 @@ class DocumentMetadata(BaseModel):
 class SyncResult:
     created: int
     updated: int
+    skipped: int
     deleted: int
 
 
@@ -120,7 +121,7 @@ class GeminiClient:
     ) -> SyncResult:
         existing_docs = self._list_existing()
         if existing_docs is None:
-            return SyncResult(0, 0, 0)
+            return SyncResult(0, 0, 0, 0)
 
         existing = {
             DocumentMetadata.from_document(d).id: d for d in existing_docs if d.name
@@ -129,6 +130,7 @@ class GeminiClient:
 
         created = 0
         updated = 0
+        skipped = 0
 
         for doc in documents:
             existing_doc = existing.get(doc.id)
@@ -141,6 +143,8 @@ class GeminiClient:
                     assert existing_doc.name is not None
                     if self._update_document(doc, existing_doc.name):
                         updated += 1
+                else:
+                    skipped += 1
 
         deleted = 0
         for existing_doc in existing_docs:
@@ -150,4 +154,6 @@ class GeminiClient:
                     if self._delete_document(existing_doc.name):
                         deleted += 1
 
-        return SyncResult(created=created, updated=updated, deleted=deleted)
+        return SyncResult(
+            created=created, updated=updated, skipped=skipped, deleted=deleted
+        )
