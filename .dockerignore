@@ -1,0 +1,11 @@
+.env
+.env.*
+.git
+.gitignore
+__pycache__
+.ruff_cache
+.venv
+articles/
+*.md
+AGENTS.md
+README.md
