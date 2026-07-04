@@ -8,7 +8,7 @@ logger = getLogger(__name__)
 
 
 @dataclass
-class Article:
+class ZendeskArticle:
     id: int
     title: str
     html_url: str
@@ -28,7 +28,7 @@ class Article:
     content_tag_ids: list[int]
 
     @classmethod
-    def from_api_dict(cls, data: dict[str, Any]) -> "Article":
+    def from_api_dict(cls, data: dict[str, Any]) -> "ZendeskArticle":
         return cls(
             id=data["id"],
             title=data["title"],
@@ -59,8 +59,8 @@ class ZendeskClient:
         self.session = requests.Session()
         logger.info("Initialized ZendeskClient for %s (%s)", self.base_url, self.locale)
 
-    def get_all_articles(self) -> list[Article]:
-        articles: list[Article] = []
+    def get_all_articles(self) -> list[ZendeskArticle]:
+        articles: list[ZendeskArticle] = []
         url = f"{self.base_url}/api/v2/help_center/{self.locale}/articles.json"
         params = {"per_page": self.MAX_PER_PAGE}
 
@@ -69,7 +69,7 @@ class ZendeskClient:
             resp = self.session.get(url, params=params)
             resp.raise_for_status()
             data = resp.json()
-            articles.extend(Article.from_api_dict(a) for a in data["articles"])
+            articles.extend(ZendeskArticle.from_api_dict(a) for a in data["articles"])
             page = data.get("page", "?")
             page_count = data.get("page_count", "?")
             logger.debug(
