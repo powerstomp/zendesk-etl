@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "html2text>=2025.4.15",
+    "pydantic>=2.13.4",
     "requests>=2.34.2",
 ]
 

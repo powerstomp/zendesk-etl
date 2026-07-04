@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime
 
 import html2text
 
@@ -20,8 +21,8 @@ class MarkdownDocument:
     url: str
     locale: str
     body: str
-    created_at: str
-    updated_at: str
+    created_at: datetime
+    updated_at: datetime
 
 
 def html_to_markdown(html: str) -> str:
