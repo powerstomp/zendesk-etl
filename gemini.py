@@ -1,4 +1,5 @@
 import logging
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
@@ -34,6 +35,13 @@ class DocumentMetadata(BaseModel):
             CustomMetadataDict(key="locale", string_value=self.locale),
             CustomMetadataDict(key="updated_at", string_value=str(self.updated_at)),
         ]
+
+
+@dataclass
+class SyncResult:
+    created: int
+    updated: int
+    deleted: int
 
 
 class GeminiClient:
@@ -108,27 +116,37 @@ class GeminiClient:
     def sync(
         self,
         documents: list[MarkdownDocument],
-    ) -> None:
+    ) -> SyncResult:
         existing_docs = self._list_existing()
         if existing_docs is None:
-            return
+            return SyncResult(0, 0, 0)
+
         existing = {
             DocumentMetadata.from_document(d).id: d for d in existing_docs if d.name
         }
         local_ids = {d.id for d in documents}
 
+        created = 0
+        updated = 0
+
         for doc in documents:
             existing_doc = existing.get(doc.id)
             if existing_doc is None:
-                self._upload_document(doc)
+                if self._upload_document(doc):
+                    created += 1
             else:
                 existing_meta = DocumentMetadata.from_document(existing_doc)
                 if existing_meta.updated_at < doc.updated_at:
                     assert existing_doc.name is not None
-                    self._update_document(doc, existing_doc.name)
+                    if self._update_document(doc, existing_doc.name):
+                        updated += 1
 
+        deleted = 0
         for existing_doc in existing_docs:
             if existing_doc.name:
                 meta = DocumentMetadata.from_document(existing_doc)
                 if meta.id not in local_ids:
-                    self._delete_document(existing_doc.name)
+                    if self._delete_document(existing_doc.name):
+                        deleted += 1
+
+        return SyncResult(created=created, updated=updated, deleted=deleted)

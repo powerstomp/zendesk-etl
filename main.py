@@ -47,7 +47,14 @@ def main() -> None:
 
     if GOOGLE_STORE_RESOURCE_NAME:
         gclient = GeminiClient(GOOGLE_STORE_RESOURCE_NAME, OUTPUT_DIR)
-        gclient.sync(articles)
+        logger.info("Syncing documents...")
+        result = gclient.sync(articles)
+        logger.info(
+            "Synced: %d created, %d updated, %d deleted",
+            result.created,
+            result.updated,
+            result.deleted,
+        )
     else:
         logger.warning("GOOGLE_STORE_RESOURCE_NAME not set, skipping Gemini sync")
 
