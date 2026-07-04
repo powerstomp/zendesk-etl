@@ -86,7 +86,7 @@ class GeminiClient:
                     "custom_metadata": meta.to_list(),
                 },
             )
-            logger.debug("Uploaded %s — %s", doc.id, doc.title)
+            logger.info("Uploaded %s — %s", doc.id, doc.title)
             return True
         except Exception:
             logger.exception(
@@ -99,6 +99,7 @@ class GeminiClient:
             self.client.file_search_stores.documents.delete(
                 name=resource_name, config={"force": True}
             )
+            logger.info("Deleted %s", resource_name)
             return True
         except Exception:
             logger.exception("Failed to delete document", exc_info=True)
