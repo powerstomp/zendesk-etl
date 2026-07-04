@@ -53,14 +53,15 @@ class Article:
 class ZendeskClient:
     MAX_PER_PAGE = 100
 
-    def __init__(self, base_url: str):
+    def __init__(self, base_url: str, locale: str = "en-us"):
         self.base_url = base_url.rstrip("/")
+        self.locale = locale
         self.session = requests.Session()
-        logger.info("Initialized ZendeskClient for %s", self.base_url)
+        logger.info("Initialized ZendeskClient for %s (%s)", self.base_url, self.locale)
 
     def get_all_articles(self) -> list[Article]:
         articles: list[Article] = []
-        url = f"{self.base_url}/api/v2/help_center/articles.json"
+        url = f"{self.base_url}/api/v2/help_center/{self.locale}/articles.json"
         params = {"per_page": self.MAX_PER_PAGE}
 
         while url:
