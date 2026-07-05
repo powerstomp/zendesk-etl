@@ -1,15 +1,14 @@
+import logging
 import re
 from dataclasses import dataclass
 from datetime import datetime
-from logging import getLogger
-from nt import remove
 from typing import NamedTuple
 
 import html2text
 
 from zendesk import ZendeskArticle
 
-logger = getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 _converter = html2text.HTML2Text()
@@ -46,10 +45,6 @@ def html_to_markdown(html: str) -> MarkdownConversionResult:
     md = _converter.handle(html).strip()
     cleaned, count = BASE64_IMAGE_PATTERN.subn("", md)
     return MarkdownConversionResult(body=cleaned, removed_base64_images_count=count)
-
-
-def slugify(article: ZendeskArticle | MarkdownDocument) -> str:
-    return str(article.id)
 
 
 def convert_article(article: ZendeskArticle) -> MarkdownDocument:

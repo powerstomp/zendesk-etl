@@ -59,7 +59,7 @@ class GeminiClient:
             logger.debug("Found %d existing documents in store", len(result))
             return result
         except Exception:
-            logger.exception("Failed to list existing documents", exc_info=True)
+            logger.exception("Failed to list existing documents")
             return None
 
     def _upload_document(
@@ -90,9 +90,7 @@ class GeminiClient:
             logger.info("Uploaded %s — %s", doc.id, doc.title)
             return True
         except Exception:
-            logger.exception(
-                "Failed to upload %s — %s", doc.id, doc.title, exc_info=True
-            )
+            logger.exception("Failed to upload %s — %s", doc.id, doc.title)
             return False
 
     def _delete_document(self, resource_name: str) -> bool:
@@ -103,7 +101,7 @@ class GeminiClient:
             logger.info("Deleted %s", resource_name)
             return True
         except Exception:
-            logger.exception("Failed to delete document", exc_info=True)
+            logger.exception("Failed to delete document")
             return False
 
     def _update_document(

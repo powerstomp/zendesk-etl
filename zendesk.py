@@ -1,10 +1,10 @@
+import logging
 from datetime import datetime
-from logging import getLogger
 
 import requests
 from pydantic import BaseModel
 
-logger = getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class ZendeskArticle(BaseModel):

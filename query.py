@@ -7,6 +7,8 @@ from google import genai
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
 
+MODEL_NAME = "gemini-3.1-flash-lite"
+
 SYSTEM_PROMPT = """You are OptiBot, the customer-support bot for OptiSigns.com.
 • Tone: helpful, factual, concise.
 • Only answer using the uploaded docs.
@@ -27,7 +29,7 @@ def main() -> None:
 
     client = genai.Client()
     interaction = client.interactions.create(
-        model="gemini-3.1-flash-lite",
+        model=MODEL_NAME,
         input=question,
         system_instruction=SYSTEM_PROMPT,
         tools=[
