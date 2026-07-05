@@ -31,7 +31,7 @@ docker run --env-file .env zendesk-etl python main.py
 ## Demo
 
 - [GitHub Action pipeline runs](https://github.com/powerstomp/zendesk-etl/actions/workflows/daily-sync.yml)
-- [Example run output](https://github.com/powerstomp/zendesk-etl/actions/runs/28706692511/job/85133417999)
+- [Example run output](https://github.com/powerstomp/zendesk-etl/actions/runs/28711025329/job/85144485909)
 
 ![Example of chatbot query](assets/query.PNG)
 
